@@ -2,85 +2,74 @@
 
 A command-line tool for searching and saving remote job listings. Pulls live data from the [RemoteOK](https://remoteok.com) public API — no API key required, no external libraries needed.
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
+![Dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 ## Features
 
-- **Search** remote jobs by keyword (title, company, tags, description)
-- **Save** interesting listings to a local SQLite database
-- **List** your saved jobs at any time
+- **Search** live remote jobs by keyword — matches against title, company, tags, and description
+- **Save** listings to a local SQLite database for later review
+- **List** all saved jobs with company, title, and URL
 - **Remove** jobs you're no longer interested in
-- **Export** your saved list to CSV for tracking applications
+- **Export** your saved list to CSV for application tracking
+- No API key, no sign-up — uses RemoteOK's public endpoint
+- No external dependencies — uses only Python's `urllib`, `sqlite3`, `csv`, `argparse`
+
+## Requirements
+
+- Python 3.10+
+- No `pip install` needed
 
 ## Installation
 
 ```bash
 git clone https://github.com/jonatakuzi/job-tracker.git
 cd job-tracker
-python scraper.py --help
 ```
-
-Requires Python 3.10+ — no `pip install` needed. Uses only the standard library (`urllib`, `sqlite3`, `csv`, `argparse`).
 
 ## Usage
 
 ### Search for jobs
-
 ```bash
 python scraper.py search python
-python scraper.py search devops --limit 20
+python scraper.py search "security engineer" --limit 20
+python scraper.py search devops
 ```
-
-Example output:
 ```
 Searching remote jobs for "python"...
 
-------------------------------------------------------------
-  ID:      123456
-  Title:   Backend Python Engineer
+──────────────────────────────────────────────────────
+  ID:      120483
+  Title:   Senior Python Developer
   Company: Acme Corp
-  Tags:    python, django, postgresql, aws, backend
-  Date:    2026-05-20
-  URL:     https://remoteok.com/l/123456
-------------------------------------------------------------
-
-10 result(s). Use 'save <ID>' to bookmark one.
+  Tags:    python, django, postgresql
+  URL:     https://remoteok.com/jobs/120483
+──────────────────────────────────────────────────────
 ```
 
 ### Save a job
-
 ```bash
-python scraper.py save 123456
-# Saved: Backend Python Engineer @ Acme Corp
+python scraper.py save 120483
 ```
 
-### View saved jobs
-
+### List saved jobs
 ```bash
 python scraper.py list
 ```
 
+### Export saved jobs to CSV
+```bash
+python scraper.py export saved_jobs.csv
+```
+
 ### Remove a saved job
-
 ```bash
-python scraper.py remove 123456
+python scraper.py remove 120483
 ```
 
-### Export to CSV
+## Tech Stack
 
-```bash
-python scraper.py export
-python scraper.py export --output my_applications.csv
-```
-
-## Project Structure
-
-```
-job-tracker/
-├── scraper.py   # CLI entry point and RemoteOK API scraping logic
-├── db.py        # SQLite storage layer (save/list/delete jobs)
-├── jobs.db      # Created automatically on first run
-└── README.md
-```
-
-## Why I Built This
-
-Tracking job applications across browser tabs and sticky notes is a mess. This tool centralizes the search-and-save workflow in the terminal, keeps a persistent local record, and exports clean CSV data for further analysis or sharing. It also demonstrates practical use of Python's `urllib` for HTTP, JSON parsing, and `sqlite3` for lightweight persistence — all without external dependencies.
+- Python 3.10+
+- RemoteOK public API (no key required)
+- Standard library: `urllib`, `sqlite3`, `csv`, `json`, `argparse`
